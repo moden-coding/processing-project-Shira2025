@@ -54,7 +54,7 @@ public class App extends PApplet {
     }
 
     public void setup() {
-        startTime = millis(); // Record the time when the shape becomes visible
+        
         background(108, 213, 217); // light blue grey background
         fill(209, 169, 199);
         rect(325, 125, 200, 100);
@@ -117,10 +117,13 @@ public class App extends PApplet {
             clickstart = true;
         }
     }
+    
     public void gameSet () {
         background(99, 119, 122); // Clear the screen every frame
 
-        // Check if 5 seconds have passed since the shape became visible
+        startTime = millis(); // Record the time when the shape becomes visible
+
+        // Check if 3 seconds have passed since the shape became visible
         int currentTime = millis();
         if (currentTime - startTime > visibleDuration) {
             isVisible = false; // Set visibility to false after 5 seconds
@@ -226,8 +229,12 @@ public class App extends PApplet {
         else if (clicked3) {
             boxXyellow = mouseX - boxWidthyellow / 2;
             boxYyellow = mouseY - boxWidthyellow / 2;
-        }
+        }  
     }
+
+    public void levelDone () {
+//         if (isOverlapping(rectX, rectY, rectWidth, rectHeight, boxX, boxY, rectWidth2, rectHeight2) && isOverlapping(boxXblue, boxYblue, boxWidthblue,boxHeightblue, rectX2, rectY2, rectWidth2nd, rectHeight2nd))
+     }
 }
 
 
