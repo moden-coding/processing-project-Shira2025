@@ -2,6 +2,8 @@ import processing.core.*;
 
 public class App extends PApplet {
     int checkCount = 0;
+    int nextlevel = 0;
+    int score = 0;
 
     boolean clicked = false; // red moving block click
     boolean clicked2 = false; // blue moving box cick
@@ -10,7 +12,7 @@ public class App extends PApplet {
     boolean redOverlapping = false;
     boolean blueOverlapping = false;
 
-    int nextlevel = 0;
+  
 
     int boxX = 100; // red moving block
     int boxY = 675;
@@ -42,7 +44,7 @@ public class App extends PApplet {
     float rectWidth2 = boxWidth, rectHeight2 = boxHeight; // Moving block
 
     boolean isVisible = true; // A flag to control visibility
-    int visibleDuration = 3000; // 3 seconds (3000 milliseconds)
+    int visibleDuration = 1000; // 1 second (1000 milliseconds)
     int startTime; // Variable to store the time when the shape became visible
 
     // Variables to store positions of the two rectangles
@@ -128,9 +130,9 @@ public class App extends PApplet {
 
     public void gameSet() {
         background(99, 119, 122);
-
-        // Record the time when the shape becomes visible
-
+        fill(0);
+        textSize(32);
+        text("Score: " + score, 675, 100);
         // Check if 3 seconds have passed since the shape became visible
         int currentTime = millis();
         if (currentTime - startTime > visibleDuration) {
@@ -162,7 +164,7 @@ public class App extends PApplet {
     }
 
     // Function to check if two rectangles are overlapping
-    boolean isOverlapping(float targetX, float targetY, float targetWidth, float targetHeight, float movingBoxX,
+    public boolean isOverlapping(float targetX, float targetY, float targetWidth, float targetHeight, float movingBoxX,
             float movingBoxY, float movingBoxWidth, float movingBoxHeight) {
         if (movingBoxX < targetX + targetWidth && movingBoxX + movingBoxWidth > targetX) {
             if (movingBoxY < targetY + targetHeight && movingBoxY + movingBoxHeight > targetY) {
@@ -246,7 +248,8 @@ public class App extends PApplet {
 
     public void levelDone() { // after complete lvl: next
         if (redOverlapping == true && blueOverlapping == true) {
-            // text("Score" 50, 100);
+            score =+1;
+            text("Score: " + score, 675, 100);
             System.out.println(checkCount);
         }
     }
