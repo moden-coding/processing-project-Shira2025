@@ -1,7 +1,6 @@
 import processing.core.*;
 
 public class App extends PApplet {
-    int checkCount = 0;
     int nextlevel = 0;
     int score = 0;
 
@@ -9,10 +8,10 @@ public class App extends PApplet {
     boolean clicked2 = false; // blue moving box cick
     boolean clicked3 = false; // yellow moving block click
     boolean clickstart = false; // detect the start button
+    boolean clicknext = false; // next button
+    boolean clicknextclick = false;
     boolean redOverlapping = false;
     boolean blueOverlapping = false;
-
-  
 
     int boxX = 100; // red moving block
     int boxY = 675;
@@ -34,8 +33,13 @@ public class App extends PApplet {
     int startWidth = 200;
     int startHeight = 100;
 
-    float orderboxX = 500, orderboxY = 15, orderboxWidth = 50, orderboxHeight = 50;
-    float orderboxX2 = 560, orderboxY2 = 15, orderboxWidth2 = 50, orderboxHeight2 = 50;
+    int nextX = 650; // next box
+    int nextY = 710;
+    int nextWidth = 100;
+    int nextHeight = 50;
+
+    float orderboxX = 400, orderboxY = 15, orderboxWidth = 50, orderboxHeight = 50;
+    float orderboxX2 = 460, orderboxY2 = 15, orderboxWidth2 = 50, orderboxHeight2 = 50;
 
     float rectX = 325, rectY = 300, rectWidth = 150, rectHeight = 150; // Place here box
     float rectX2 = 480, rectY2 = 300, rectWidth2nd = 150, rectHeight2nd = 150; // Place here box 2
@@ -60,14 +64,6 @@ public class App extends PApplet {
     }
 
     public void setup() {
-
-        background(108, 213, 217); // light blue grey background
-        fill(209, 169, 199);
-        rect(325, 125, 200, 100); // startbutton
-        fill(0);
-        textSize(60);
-        text("Start!", 350, 200);
-
     }
 
     public void settings() {
@@ -76,11 +72,13 @@ public class App extends PApplet {
 
     public void draw() {
         background(108, 213, 217); // Clear the screen every frame, light blue grey background
-        fill(209, 169, 199);
-        rect(325, 125, 200, 100);
+        fill(209, 169, 199); // pink
+        rect(325, 125, 200, 100); // start box
         fill(0);
         textSize(60);
         text("Start!", 350, 200);
+        textSize(32);
+        text("Click once to drag box, click again to drop box", 100, 400);
         // Draw Rectangle 1
         fill(255, 182, 193); // Pale pink color
         rect(rect1X, rect1Y, 100, 100); // Rectangle 1
@@ -113,23 +111,21 @@ public class App extends PApplet {
             speed2Y *= -1; // Reverse vertical direction
         }
         if (clickstart) {
-            System.out.println("click started!");
-            gamestart();
+            gamestart(); // method called again and again
         }
+
     }
 
     public void mouseTap() {
         if (clickstart == false && mouseX > startX && mouseY > startY && mouseX < startX + startWidth
                 && mouseY < startY + startHeight) {
-            System.out.println("you clicked start");
             clickstart = true;
             startTime = millis();
-
         }
     }
 
-    public void gameSet() {
-        background(99, 119, 122);
+    public void gameSetup() {
+        // background(99, 119, 122);
         fill(0);
         textSize(32);
         text("Score: " + score, 675, 100);
@@ -142,7 +138,7 @@ public class App extends PApplet {
         // Draw text and other set up elements
         fill(0);
         textSize(50);
-        text("Order:", 350, 50);
+        text("Order:", 200, 50);
 
         fill(0);
         text("You have:", 50, 650);
@@ -159,6 +155,9 @@ public class App extends PApplet {
         } else if (mouseX > boxXyellow && mouseY > boxYyellow && mouseX < boxXyellow + boxWidthyellow
                 && mouseY < boxYyellow + boxHeightyellow) {
             clicked3 = !clicked3;
+        } else if (mouseX > nextX && mouseY > nextY && mouseX < nextX + nextWidth && mouseY < nextY + nextHeight) {
+            clicknext = !clicknext;
+            System.out.println("you clicked next");
         }
         mouseTap();
     }
@@ -175,8 +174,8 @@ public class App extends PApplet {
     }
 
     public void gamestart() {
-        gameSet();
-
+        background(99, 119, 122);
+        gameSetup();
         // Draw the "place here" box
         fill(0); // Black
         rect(rectX, rectY, rectWidth, rectHeight);
@@ -208,8 +207,7 @@ public class App extends PApplet {
         rect(boxXyellow, boxYyellow, boxWidthyellow, boxHeightyellow);
 
         // Check if rectangles are overlapping
-        if (isOverlapping(rectX, rectY, rectWidth, rectHeight, boxX, boxY, rectWidth2, rectHeight2)
-                && checkCount == 0) {
+        if (isOverlapping(rectX, rectY, rectWidth, rectHeight, boxX, boxY, rectWidth2, rectHeight2)) {
             fill(0); // Change fill color to black if overlapping
             textSize(32);
             text("The red rectangle is in the correct place", 80, 90);
@@ -219,8 +217,7 @@ public class App extends PApplet {
             textSize(32);
             text("The red rectangle is not in the correct place.", 80, 90);
         }
-        if (isOverlapping(boxXblue, boxYblue, boxWidthblue, boxHeightblue, rectX2, rectY2, rectWidth2nd, rectHeight2nd)
-                && checkCount == 0) {
+         if (isOverlapping(boxXblue, boxYblue, boxWidthblue, boxHeightblue, rectX2, rectY2, rectWidth2nd, rectHeight2nd)) {
             fill(0); // Change fill color to black if overlapping
             textSize(32);
             text("The blue rectangle is in the correct place", 80, 120);
@@ -229,9 +226,7 @@ public class App extends PApplet {
             fill(0);
             textSize(32);
             text("The blue rectangle is not in the corrct place", 80, 120);
-
         }
-        levelDone();
 
         // Move the moving box if clicked
         if (clicked) {
@@ -244,13 +239,33 @@ public class App extends PApplet {
             boxXyellow = mouseX - boxWidthyellow / 2;
             boxYyellow = mouseY - boxWidthyellow / 2;
         }
+        levelDone();
+        if (score == 1) {
+            fill(209, 169, 199);
+            rect(nextX, nextY, nextWidth, nextHeight);
+            fill(0);
+            text("Next", 675, 750);
+        }
+        // mousePressed ();
+        if (clicknext == true) {
+            TheNextlevel();
+        }
+
     }
 
     public void levelDone() { // after complete lvl: next
         if (redOverlapping == true && blueOverlapping == true) {
-            score =+1;
+            score = +1;
+            nextlevel = +1;
             text("Score: " + score, 675, 100);
-            System.out.println(checkCount);
+            
         }
     }
+
+    public void TheNextlevel() {
+        background(123, 73, 156);
+        gameSetup();
+        
+    }
 }
+// im sure there is a better way to do this than copy and paste
