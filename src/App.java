@@ -74,11 +74,17 @@ public class App extends PApplet {
     float rectX2 = 480, rectY2 = 300, rectWidth2nd = 150, rectHeight2nd = 150; // Place here box 2
     float rectX3 = 635, rectY3 = 300, rectWidth3 = 150, rectHeight3 = 150; // Place here box 2
 
+    float blueTriX1 = 325, blueTriY1 = 100, blueTriX2 = 425, blueTriY2 = 100, blueTriX3 = 375, blueTriY3 = 10;
+    float redTriX1 = 450, redTriY1 = 100, redTriX2 = 550, redTriY2 = 100, redTriX3 = 500, redTriY3 = 10;
+    float yellowTriX1 = 575, yellowTriY1 = 100, yellowTriX2 = 675, yellowTriY2 = 100, yellowTriX3 = 625, yellowTriY3 = 10;
+
     float rectWidth2 = boxWidth, rectHeight2 = boxHeight; // Moving block
 
     boolean isVisible = true; // A flag to control visibility
+    boolean isVisble2 = true; // A second flag to control visibility
     int visibleDuration = 1000; // 1 second (1000 milliseconds)
     int startTime; // Variable to store the time when the shape became visible
+    int startTime2; 
 
     // Variables to store positions of the two rectangles
     float rect1X = 50, rect1Y = 100; // Initial position of Rectangle 1
@@ -158,10 +164,10 @@ public class App extends PApplet {
         fill(0);
         textSize(32);
         text("Score: " + score, 675, 100);
-        // Check if 3 seconds have passed since the shape became visible
+        // Check if 1 second have passed since the shape became visible
         int currentTime = millis();
         if (currentTime - startTime > visibleDuration) {
-            isVisible = false; // Set visibility to false after 5 seconds
+            isVisible = false; // Set visibility to false after 1 second
         }
 
         // Draw text and other set up elements
@@ -187,7 +193,7 @@ public class App extends PApplet {
         } else if (mouseX > nextX && mouseY > nextY && mouseX < nextX + nextWidth && mouseY < nextY + nextHeight) {
             clicknext = !clicknext;
             System.out.println("you clicked next");
-        } else if (mouseX > triangleX1 && mouseY > triangleY3 && mouseX < triangleX2) {
+        } else if (mouseX > triangleX1 && mouseY > triangleY3 && mouseX < triangleX2) { // HERE
             clickedtriRed = !clickedtriRed;
         }
         mouseTap();
@@ -201,6 +207,17 @@ public class App extends PApplet {
                 return true;
             }
         }
+        return false;
+    }
+
+    // Function to check if triangle is overlapping square
+    public boolean TriIsOverlapping(float targetX, float targetY, float targetWidth, float targetHeight, float x1,
+            float y1, float x2, float y2, float x3, float y3) {
+        // if (movingBoxX < targetX + targetWidth && movingBoxX + movingBoxWidth > targetX) { // HERE
+        //     if (movingBoxY < targetY + targetHeight && movingBoxY + movingBoxHeight > targetY) {
+        //         return true;
+        //     }
+        // }
         return false;
     }
 
@@ -227,7 +244,6 @@ public class App extends PApplet {
 
         fill(255, 69, 69); // moving box red
         rect(boxX, boxY, boxWidth, boxHeight); // Draw moving box 
-
       
         fill(52, 161, 235); // moving box2 blue
         rect(boxXblue, boxYblue, boxWidthblue, boxHeightblue);
@@ -287,15 +303,24 @@ public class App extends PApplet {
             score = +1;
             nextlevel = +1;
             text("Score: " + score, 675, 100);
-            
         }
     }
 
     public void TheNextlevel() {
         background(123, 73, 156);
+        int currentTime2 = millis();
+         if (currentTime2 - startTime2 > visibleDuration) {
+            isVisble2 = false; // Set visibility to false after 1 second
+         }
         gameSetup();
+
+        if (clicknext == true && mouseX > nextX && mouseY > nextY && mouseX < nextX + nextWidth && mouseY < nextY + nextHeight){ // if next is clicked
+            startTime2 = millis(); // new start time
+            isVisble2 = true; // boxes will be visible 
+        }
+
          // Draw the "place here" box
-         fill(0); // Black
+         fill(0); 
          rect(rectX, rectY, rectWidth, rectHeight);
  
          fill(0); // second place here box
@@ -303,6 +328,15 @@ public class App extends PApplet {
  
          fill(0); // third place here box
          rect(rectX3, rectY3, rectWidth3, rectHeight3);
+
+        if (isVisble2) { //  new count
+            fill(255, 69, 69); //red
+            triangle (redTriX1, redTriY2, redTriX2, redTriY2, redTriX3, redTriY3); // orderbox red
+            fill(52, 161, 235); //blue
+            triangle (blueTriX1,blueTriY1,blueTriX2,blueTriY2,blueTriX3,blueTriY3); // orderbox blue
+            fill(237, 185, 43); // yellow
+            triangle (yellowTriX1, yellowTriY1,yellowTriX2,yellowTriY1,yellowTriX3,yellowTriY3); // orderbox yellow
+      }
 
          fill(255, 69, 69); //red
          triangle(triangleX1,triangleY1,triangleX2,triangleY2,triangleX3,triangleY3);
@@ -313,11 +347,9 @@ public class App extends PApplet {
          fill(237, 185, 43); // yellow
          triangle (yellowTriangleX1,yellowTriangleY1,yellowTriangleX2,yellowtTriangleY2,yellowTriangleX3,yellowTriangleY3);
 
-        
-         if (clickedtriRed) {
-             
-            mouseX = centroidX;
-            mouseY = centroidY;
+         if (clickedtriRed) { // math??? or code wrong??? // HERE
+             centroidX = mouseX;
+             centroidY = mouseY;
         }
     }
    
