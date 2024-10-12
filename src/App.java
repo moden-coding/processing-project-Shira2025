@@ -33,15 +33,17 @@ public class App extends PApplet {
     int boxWidthyellow = 100;
     int boxHeightyellow = 100;
 
-    int triangleX1 = 100; // lvl 2 triangle red
-    int triangleY1 = 775;
-    int triangleX2 = 200;
-    int triangleY2 = 775;
-    int triangleX3 = 150;
-    int triangleY3 = 675;
+    // int triangleX1 = 100; // lvl 2 triangle red
+    // int triangleY1 = 775;
+    // int triangleX2 = 200;
+    // int triangleY2 = 775;
+    // int triangleX3 = 150;
+    // int triangleY3 = 675;
 
-    int centroidX = (triangleX1 + triangleX2 + triangleX3) / 3;
-    int centroidY = (triangleY1 + triangleY2 + triangleY3) / 3;   
+    // Triangle vertices
+    float triangleX1 = 100, triangleY1 = 775;
+    float triangleX2 = 200, triangleY2 = 775;
+    float triangleX3 = 150, triangleY3 = 675;
 
     int blueTriangleX1 = 250; // lvl 2 triangle blue
     int blueTriangleY1 = 775;
@@ -84,7 +86,7 @@ public class App extends PApplet {
     boolean isVisble2 = true; // A second flag to control visibility
     int visibleDuration = 1000; // 1 second (1000 milliseconds)
     int startTime; // Variable to store the time when the shape became visible
-    int startTime2; 
+    int startTime2;
 
     // Variables to store positions of the two rectangles
     float rect1X = 50, rect1Y = 100; // Initial position of Rectangle 1
@@ -93,6 +95,8 @@ public class App extends PApplet {
     // Variables to control the movement speed of the rectangles
     float speed1X = 2, speed1Y = 1; // Speed for Rectangle 1
     float speed2X = -2, speed2Y = -1; // Speed for Rectangle 2 (moving left and up)
+
+    int gameState = 0;
 
     public static void main(String[] args) {
         PApplet.main("App");
@@ -106,6 +110,25 @@ public class App extends PApplet {
     }
 
     public void draw() {
+
+        if(gameState == 0){
+            homePage();
+            // gameSetup();
+            //do all of the start screen stuff
+        }else if(gameState == 1){
+            gamestart(); 
+            //show level 1 stuff
+        }else if(gameState == 2){
+            gamestart();
+            //show level 1 stuff and show next button
+            //make next button clickable
+        }else if(gameState == 3){
+            TheNextlevel();
+            clicknext = false;
+        }
+    }
+
+    public void homePage() {
         background(108, 213, 217); // Clear the screen every frame, light blue grey background
         fill(209, 169, 199); // pink
         rect(325, 125, 200, 100); // start box
@@ -146,9 +169,9 @@ public class App extends PApplet {
             speed2Y *= -1; // Reverse vertical direction
         }
         if (clickstart) {
-            gamestart(); // method called again and again
+            gameState = 1;
+            // method called again and again
         }
-
     }
 
     public void mouseTap() {
@@ -190,12 +213,21 @@ public class App extends PApplet {
         } else if (mouseX > boxXyellow && mouseY > boxYyellow && mouseX < boxXyellow + boxWidthyellow
                 && mouseY < boxYyellow + boxHeightyellow) {
             clicked3 = !clicked3;
-        } else if (mouseX > nextX && mouseY > nextY && mouseX < nextX + nextWidth && mouseY < nextY + nextHeight) {
+        } else if (mouseX > nextX && mouseY > nextY && mouseX < nextX + nextWidth && mouseY < nextY + nextHeight
+                && gameState == 2) {
             clicknext = !clicknext;
             System.out.println("you clicked next");
-        } else if (mouseX > triangleX1 && mouseY > triangleY3 && mouseX < triangleX2) { // HERE
-            clickedtriRed = !clickedtriRed;
-        }
+          }               
+         // else if (isMouseInTriangle(triangleX1, triangleY1, triangleX2, triangleY2, triangleX3, triangleY3)) {
+        //                         clickedtriRed = !clickedtriRed;
+        //                     } else if (isMouseInTriangle(blueTriangleX1, blueTriangleY1, blueTriangleX2, blueTriangleY2, blueTriangleX3,
+        //                             blueTriangleY3)) {
+        //                         clickedtriBlue = !clickedtriBlue;
+        //                     } else if (isMouseInTriangle(yellowTriangleX1, yellowTriangleY1, yellowTriangleX2, yellowtTriangleY2,
+        //                             yellowTriangleX3, yellowTriangleY3)) {
+        //                         clickedtriYellow = !clickedtriYellow;
+        //                     }
+
         mouseTap();
     }
 
@@ -210,16 +242,36 @@ public class App extends PApplet {
         return false;
     }
 
-    // Function to check if triangle is overlapping square
-    public boolean TriIsOverlapping(float targetX, float targetY, float targetWidth, float targetHeight, float x1,
-            float y1, float x2, float y2, float x3, float y3) {
-        // if (movingBoxX < targetX + targetWidth && movingBoxX + movingBoxWidth > targetX) { // HERE
-        //     if (movingBoxY < targetY + targetHeight && movingBoxY + movingBoxHeight > targetY) {
-        //         return true;
-        //     }
-        // }
-        return false;
-    }
+                                    // // Function to check if triangle is overlapping a square
+                                    // public boolean TriIsOverlapping(float targetX, float targetY, float targetWidth, float targetHeight, 
+                                    //                                 float x1, float y1, float x2, float y2, float x3, float y3) {
+                                    //     // Check if any of the triangle's vertices are inside the square
+                                    //     if (isPointInsideSquare(targetX, targetY, targetWidth, targetHeight, x1, y1) || 
+                                    //         isPointInsideSquare(targetX, targetY, targetWidth, targetHeight, x2, y2) ||
+                                    //         isPointInsideSquare(targetX, targetY, targetWidth, targetHeight, x3, y3)) {
+                                    //         return true;   
+                                    //     }
+                                    //     return false;
+                                    // }
+
+                                    // // Helper function to check if a point is inside a square
+                                    // public boolean isPointInsideSquare(float squareX, float squareY, float squareWidth, float squareHeight, float px, float py) {
+                                    //     return (px >= squareX && px <= squareX + squareWidth &&
+                                    //             py >= squareY && py <= squareY + squareHeight);
+                                    // }
+
+                                    //     float area(float x1, float y1, float x2, float y2, float x3, float y3) {
+                                    //         // Casting the result to float to avoid the double type
+                                    //         return abs((float) ((x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / 2.0)); // abs is absulute value
+                                    //     }
+
+                                    //     public boolean isMouseInTriangle(float x1, float y1, float x2, float y2, float x3, float y3) {
+                                    //         float A = area(x1, y1, x2, y2, x3, y3);
+                                    //         float A1 = area(mouseX, mouseY, x2, y2, x3, y3);
+                                    //         float A2 = area(x1, y1, mouseX, mouseY, x3, y3);
+                                    //         float A3 = area(x1, y1, x2, y2, mouseX, mouseY);
+                                    //         return (A == A1 + A2 + A3);
+                                    //     }
 
     public void gamestart() {
         background(99, 119, 122);
@@ -243,8 +295,8 @@ public class App extends PApplet {
         }
 
         fill(255, 69, 69); // moving box red
-        rect(boxX, boxY, boxWidth, boxHeight); // Draw moving box 
-      
+        rect(boxX, boxY, boxWidth, boxHeight); // Draw moving box
+
         fill(52, 161, 235); // moving box2 blue
         rect(boxXblue, boxYblue, boxWidthblue, boxHeightblue);
 
@@ -262,7 +314,8 @@ public class App extends PApplet {
             textSize(32);
             text("The red rectangle is not in the correct place.", 80, 90);
         }
-         if (isOverlapping(boxXblue, boxYblue, boxWidthblue, boxHeightblue, rectX2, rectY2, rectWidth2nd, rectHeight2nd)) {
+        if (isOverlapping(boxXblue, boxYblue, boxWidthblue, boxHeightblue, rectX2, rectY2, rectWidth2nd,
+                rectHeight2nd)) {
             fill(0); // Change fill color to black if overlapping
             textSize(32);
             text("The blue rectangle is in the correct place", 80, 120);
@@ -284,16 +337,19 @@ public class App extends PApplet {
             boxXyellow = mouseX - boxWidthyellow / 2;
             boxYyellow = mouseY - boxWidthyellow / 2;
         }
+
         levelDone();
         if (score == 1) {
             fill(209, 169, 199);
             rect(nextX, nextY, nextWidth, nextHeight);
             fill(0);
             text("Next", 675, 750);
+            gameState = 2;
         }
         // mousePressed ();
-        if (clicknext == true) {
-            TheNextlevel();
+        if (clicknext == true) { // not here
+            System.out.println("clicknext");
+            gameState = 3;
         }
 
     }
@@ -309,96 +365,77 @@ public class App extends PApplet {
     public void TheNextlevel() {
         background(123, 73, 156);
         int currentTime2 = millis();
-         if (currentTime2 - startTime2 > visibleDuration) {
+        if (currentTime2 - startTime2 > visibleDuration) {
             isVisble2 = false; // Set visibility to false after 1 second
-         }
+        }
         gameSetup();
 
-        if (clicknext == true && mouseX > nextX && mouseY > nextY && mouseX < nextX + nextWidth && mouseY < nextY + nextHeight){ // if next is clicked
+        if (clicknext == true && mouseX > nextX && mouseY > nextY && mouseX < nextX + nextWidth
+                && mouseY < nextY + nextHeight) { // if next is clicked
             startTime2 = millis(); // new start time
-            isVisble2 = true; // boxes will be visible 
+            isVisble2 = true; // boxes will be visible
+            System.out.println("hiding the tri"); 
         }
 
-         // Draw the "place here" box
-         fill(0); 
-         rect(rectX, rectY, rectWidth, rectHeight);
- 
-         fill(0); // second place here box
-         rect(rectX2, rectY2, rectWidth2nd, rectHeight2nd);
- 
-         fill(0); // third place here box
-         rect(rectX3, rectY3, rectWidth3, rectHeight3);
+        // Draw the "place here" box
+        fill(0);
+        rect(rectX, rectY, rectWidth, rectHeight);
 
-        if (isVisble2) { //  new count
-            fill(255, 69, 69); //red
-            triangle (redTriX1, redTriY2, redTriX2, redTriY2, redTriX3, redTriY3); // orderbox red
-            fill(52, 161, 235); //blue
-            triangle (blueTriX1,blueTriY1,blueTriX2,blueTriY2,blueTriX3,blueTriY3); // orderbox blue
+        fill(0); // second place here box
+        rect(rectX2, rectY2, rectWidth2nd, rectHeight2nd);
+
+        fill(0); // third place here box
+        rect(rectX3, rectY3, rectWidth3, rectHeight3);
+
+        if (isVisble2) { // new count
+            fill(255, 69, 69); // red
+            triangle(redTriX1, redTriY2, redTriX2, redTriY2, redTriX3, redTriY3); // orderbox red
+            fill(52, 161, 235); // blue
+            triangle(blueTriX1, blueTriY1, blueTriX2, blueTriY2, blueTriX3, blueTriY3); // orderbox blue
             fill(237, 185, 43); // yellow
-            triangle (yellowTriX1, yellowTriY1,yellowTriX2,yellowTriY1,yellowTriX3,yellowTriY3); // orderbox yellow
-      }
-
-         fill(255, 69, 69); //red
-         triangle(triangleX1,triangleY1,triangleX2,triangleY2,triangleX3,triangleY3);
-
-         fill(52, 161, 235); //blue
-         triangle (blueTriangleX1,blueTriangleY1,blueTriangleX2,blueTriangleY2,blueTriangleX3,blueTriangleY3);
-
-         fill(237, 185, 43); // yellow
-         triangle (yellowTriangleX1,yellowTriangleY1,yellowTriangleX2,yellowtTriangleY2,yellowTriangleX3,yellowTriangleY3);
-
-         if (clickedtriRed) { // math??? or code wrong??? // HERE
-             centroidX = mouseX;
-             centroidY = mouseY;
+            triangle(yellowTriX1, yellowTriY1, yellowTriX2, yellowTriY1, yellowTriX3, yellowTriY3); // orderbox yellow
         }
-    }
-   
-    //  public float pointInTriangle (float x1, float y1, float x2, float y2, float x3, float y3, float x, float y) {
-    
-    // }
+        fill(255, 69, 69); // red
+        triangle(triangleX1, triangleY1, triangleX2, triangleY2, triangleX3, triangleY3);
+
+        fill(52, 161, 235); // blue
+        triangle(blueTriangleX1, blueTriangleY1, blueTriangleX2, blueTriangleY2, blueTriangleX3, blueTriangleY3);
+
+        fill(237, 185, 43); // yellow
+        triangle(yellowTriangleX1, yellowTriangleY1, yellowTriangleX2, yellowtTriangleY2, yellowTriangleX3,
+                yellowTriangleY3);
+
+                // if (isMouseInTriangle(triangleX1, triangleY1, triangleX2, triangleY2, triangleX3, triangleY3)) {
+                //     fill(0); // Black color if inside
+                //     System.out.println ("Mouse inside triangle!");
+                // } else {
+                //     fill(255, 0, 0); // Red if outside
+                //     System.out.println ("Mouse outside triangle");
+                // }
+                
+                if (clickedtriRed) {
+                    triangleX1 = mouseX - 50;
+                    triangleY1 = mouseY + 50;
+                    triangleX2 = mouseX + 50;
+                    triangleY2 = mouseY + 50;
+                    triangleX3 = mouseX;
+                    triangleY3 = mouseY - 50;
+                } else if (clickedtriBlue) {
+                    blueTriangleX1 = mouseX - 50;
+                    blueTriangleY1 = mouseY + 50;
+                    blueTriangleX2 = mouseX + 50;
+                    blueTriangleY2 = mouseY + 50;
+                    blueTriangleX3 = mouseX;
+                    blueTriangleY3 = mouseY - 50;
+                }
+                else if (clickedtriYellow) {
+                    yellowTriangleX1 = mouseX - 50;
+                    yellowTriangleY1 = mouseY + 50;
+                    yellowTriangleX2 = mouseX + 50;
+                    yellowtTriangleY2 = mouseY + 50;
+                    yellowTriangleX3 = mouseX;
+                    yellowTriangleY3 = mouseY - 50;
+                }
+     }
 }
- // G ( x , y ) = ( x 1 + x 2 + x 3 3 , y 1 + y 2 + y 3 3 ) 
-// CHATGPT What do i do with triangles ?
-// public void draw() {
-//     background(200);
 
-//     // Triangle vertices
-//     float x1 = 100, y1 = 100;
-//     float x2 = 200, y2 = 300;
-//     float x3 = 300, y3 = 150;
-
-//     // Draw the triangle
-//     fill(150, 150, 250);
-//     triangle(x1, y1, x2, y2, x3, y3);
-
-//     // Check if the mouse is inside the triangle
-//     if (isMouseInTriangle(x1, y1, x2, y2, x3, y3)) {
-//         fill(0); // Black color if inside
-//         text("Mouse inside triangle!", 50, 50);
-//     } else {
-//         fill(255, 0, 0); // Red if outside
-//         text("Mouse outside triangle", 50, 50);
-//     }
-// }
-
-// // Function to calculate the area of a triangle given its three vertices
-// float area(float x1, float y1, float x2, float y2, float x3, float y3) {
-//     // Casting the result to float to avoid the double type
-//     return abs((float) ((x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / 2.0)); // abs is absulute value 
-// }
-
-// // Function to check if the mouse is inside a triangle
-// boolean isMouseInTriangle(float x1, float y1, float x2, float y2, float x3, float y3) {
-//     // Calculate the area of the main triangle
-//     float A = area(x1, y1, x2, y2, x3, y3);
-
-//     // Calculate the areas of the triangles formed by the mouse point
-//     float A1 = area(mouseX, mouseY, x2, y2, x3, y3); // Mouse with two vertices of triangle
-//     float A2 = area(x1, y1, mouseX, mouseY, x3, y3); // Another combination
-//     float A3 = area(x1, y1, x2, y2, mouseX, mouseY); // Last combination
-
-//     // Check if the sum of the smaller triangle areas is equal to the main triangle's area
-//     return (A == A1 + A2 + A3);
-// }
-// }
-// // chat gpt 
