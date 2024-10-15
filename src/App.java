@@ -193,18 +193,38 @@ public class App extends PApplet {
         rect(rectX3, rectY3, rectWidth, rectHeight);
     }
 
+    public boolean isMouseInTriangle(float x1, float y1, float mouseX, float mouseY) {   
+        float deltaX = mouseX - x1; 
+        float deltaY = y1 - mouseY;   // positive deltaY means mouse is about baseline 
+     //    /|\
+     //   / | \  height
+    //   /  |  \
+    //  /   |   \
+    //  ----------
+    //    base
+    // testing if mouse is on first half of tiranlge if so test if mouse is witin desening line
+    // testing if mouse is on second half of triangle if so test if mouse is within the asending line                                            
+     if (deltaX >= 0 && deltaX <= base &&  mouseY >= y1 - height && mouseY <= y1) { // check if its in a square
+            if (deltaX <= base/ 2 && deltaY <= 2* deltaX || deltaX >= base/ 2 && deltaY <= -2* deltaX) {  //left half and right half
+              return true;
+             }   
+        }
+   return false;
+ }
+
+
     public void mousePressed() {
         System.out.println("you clicked!");
-        if (mouseX > boxXred && mouseY > boxYred && mouseX < boxXred + boxWidth && mouseY < boxYred + boxHeight) {
+        if (mouseX > boxXred && mouseY > boxYred && mouseX < boxXred + boxWidth && mouseY < boxYred + boxHeight) { // first lvl
             clickedBoxRed = !clickedBoxRed; // Toggle clicked state
-        } else if (mouseX > boxXblue && mouseY > boxYblue && mouseX < boxXblue + boxWidth
-                && mouseY < boxYblue + boxHeight) { // second moving box
+        } else if (mouseX > boxXblue && mouseY > boxYblue && mouseX < boxXblue + boxWidth 
+                && mouseY < boxYblue + boxHeight) { // second moving box first lvl
             clickedBoxBlue = !clickedBoxBlue;
         } else if (mouseX > boxXyellow && mouseY > boxYyellow && mouseX < boxXyellow + boxWidth
-                && mouseY < boxYyellow + boxHeight) {
+                && mouseY < boxYyellow + boxHeight) { // first lvl
             clickedBoxYellow = !clickedBoxYellow;
         } else if (mouseX > nextX && mouseY > nextY && mouseX < nextX + nextWidth && mouseY < nextY + nextHeight
-                && gameState == 2) {
+                && gameState == 2) {// next level 
             clicknext = !clicknext;
             System.out.println("you clicked next");
           }               
@@ -247,27 +267,6 @@ public class App extends PApplet {
                                     //         // Casting the result to float to avoid the double type
                                     //         return abs((float) ((x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / 2.0)); // abs is absulute value
                                     //     }
-
-
-
-    public boolean isMouseInTriangle(float x1, float y1, float mouseX, float mouseY) {   
-        float deltaX = mouseX - x1; 
-        float deltaY = y1 - mouseY;   // positive deltaY means mouse is about baseline 
-     //    /|\
-     //   / | \  height
-    //   /  |  \
-    //  /   |   \
-    //  ----------
-    //    base
-    // testing if mouse is on first half of tiranlge if so test if mouse is witin desening line
-    // testing if mouse is on second half of triangle if so test if mouse is within the asending line                                            
-     if (deltaX >= 0 && deltaX <= base &&  mouseY >= y1 - height && mouseY <= y1) { // check if its in a square
-            if (deltaX <= base/ 2 && deltaY <= 2* deltaX || deltaX >= base/ 2 && deltaY <= -2* deltaX) {  //left half and right half
-              return true;
-             }   
-        }
-   return false;
- }
 
  public void MyTriangle (float triX, float triY) {
     triangle (triX, triY, triX + base,triY,triX + base/ 2, triY - height);
@@ -358,7 +357,7 @@ public class App extends PApplet {
     public void levelDone() { // after complete lvl: next
         if (redOverlapping == true && blueOverlapping == true) {
             score = +1;
-            nextlevel = +1;
+            nextlevel += 1;
             text("Score: " + score, 675, 100);
         }
     }
