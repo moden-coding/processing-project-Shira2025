@@ -11,7 +11,7 @@ public class App extends PApplet {
     boolean clickedBoxBlue = false; // blue moving box cick
     boolean clickedBoxYellow = false; // yellow moving block click
 
-    boolean clickedTriRed = false; // non moving boxes 
+    boolean clickedTriRed = false; // triangle clickes
     boolean clickedTriBlue = false;
     boolean clickedTriYellow = false;
 
@@ -93,7 +93,8 @@ public class App extends PApplet {
 
         if(gameState == 0){
             homePage();
-            // gameSetup();
+            homePageInstructions();
+            mouseTap();
             //do all of the start screen stuff
         }else if(gameState == 1){
             gamestart(); 
@@ -109,8 +110,7 @@ public class App extends PApplet {
         }
     }
 
-    public void homePage() {
-        background(108, 213, 217); // Clear the screen every frame, light blue grey background
+    public void homePageInstructions (){
         fill(209, 169, 199); // pink
         rect(325, 125, 200, 100); // start box
         fill(0);
@@ -118,6 +118,10 @@ public class App extends PApplet {
         text("Start!", 350, 200);
         textSize(32);
         text("Click once to drag box, click again to drop box", 100, 400);
+    }
+
+    public void homePage() {
+        background(108, 213, 217); // Clear the screen every frame, light blue grey background
         // Draw Rectangle 1
         fill(255, 182, 193); // Pale pink color
         rect(rect1X, rect1Y, 100, 100); // Rectangle 1
@@ -138,7 +142,7 @@ public class App extends PApplet {
         if (rect1X < 0 || rect1X + 100 > width) {
             speed1X *= -1; // Reverse horizontal direction
         }
-        if (rect1Y < 0 || rect1Y + 50 > height) {
+        if (rect1Y < 0 || rect1Y + 100 > height) {
             speed1Y *= -1; // Reverse vertical direction
         }
 
@@ -146,7 +150,7 @@ public class App extends PApplet {
         if (rect2X < 0 || rect2X + 100 > width) {
             speed2X *= -1; // Reverse horizontal direction
         }
-        if (rect2Y < 0 || rect2Y + 50 > height) {
+        if (rect2Y < 0 || rect2Y + 100 > height) {
             speed2Y *= -1; // Reverse vertical direction
         }
         if (clickstart) {
@@ -156,15 +160,16 @@ public class App extends PApplet {
     }
 
     public void mouseTap() {
-        if (clickstart == false && mouseX > startX && mouseY > startY && mouseX < startX + startWidth
+        if ( gameState == 0 && clickstart == false && mouseX > startX && mouseY > startY && mouseX < startX + startWidth
                 && mouseY < startY + startHeight) {
             clickstart = true;
             startTime = millis();
+            System.out.println("click start");
         }
     }
 
     public void gameSetup() {
-        // background(99, 119, 122);
+        background(99, 119, 122);
         fill(0);
         textSize(32);
         text("Score: " + score, 675, 100);
@@ -204,14 +209,13 @@ public class App extends PApplet {
     //    base
     // testing if mouse is on first half of tiranlge if so test if mouse is witin desening line
     // testing if mouse is on second half of triangle if so test if mouse is within the asending line                                            
-     if (deltaX >= 0 && deltaX <= base &&  mouseY >= y1 - height && mouseY <= y1) { // check if its in a square
+     if (gameState == 3 &&deltaX >= 0 && deltaX <= base &&  mouseY >= y1 - height && mouseY <= y1) { // check if its in a square
             if (deltaX <= base/ 2 && deltaY <= 2* deltaX || deltaX >= base/ 2 && deltaY <= -2* deltaX) {  //left half and right half
               return true;
              }   
         }
    return false;
  }
-
 
     public void mousePressed() {
         System.out.println("you clicked!");
@@ -227,11 +231,17 @@ public class App extends PApplet {
                 && gameState == 2) {// next level 
             clicknext = !clicknext;
             System.out.println("you clicked next");
-          }               
-          else if (isMouseInTriangle (redTriangleX1, redTriangleY1, mouseX,mouseX)){
-                    clickedTriRed = !clickedTriRed;
+          }     
+          else if (gameState == 3 && get(mouseX, mouseY) == color (255, 69,69)) {
+            System.out.println("red selected");
+                clickedTriRed = !clickedTriRed;
           }
-        mouseTap();
+          else if (gameState == 3 && get(mouseX, mouseY) == color (52, 161, 235)) {
+            clickedTriBlue = !clickedTriBlue;
+          }
+          else if (gameState == 3 && get(mouseX, mouseY) == color (237, 185, 43)) { //<----- not working
+            clickedTriYellow = !clickedTriYellow;
+          }
     }
 
     // Function to check if two rectangles are overlapping
@@ -270,22 +280,23 @@ public class App extends PApplet {
 
  public void MyTriangle (float triX, float triY) {
     triangle (triX, triY, triX + base,triY,triX + base/ 2, triY - height);
- 
  }
 
+public void placeHereBox (){
+    // Draw the "place here" box
+    fill(0); // Black
+    rect(rectX, rectY, rectWidth, rectHeight);
+
+    fill(0); // second place here box
+    rect(rectX2, rectY2, rectWidth, rectHeight);
+
+    fill(0); // third place here box
+    rect(rectX3, rectY3, rectWidth, rectHeight);
+}
+
     public void gamestart() {
-        background(99, 119, 122);
+        placeHereBox();
         gameSetup();
-        // Draw the "place here" box
-        fill(0); // Black
-        rect(rectX, rectY, rectWidth, rectHeight);
-
-        fill(0); // second place here box
-        rect(rectX2, rectY2, rectWidth, rectHeight);
-
-        fill(0); // third place here box
-        rect(rectX3, rectY3, rectWidth, rectHeight);
-
         // Only draw the order box if isVisible is true
         if (isVisible) {
             fill(255, 69, 69); // Red color
@@ -394,21 +405,17 @@ public class App extends PApplet {
             MyTriangle (blueTriX1, blueTriY1); 
             fill(237, 185, 43); // yellow
             MyTriangle (yellowTriX1, yellowTriY1);
-    
         }
         fill(255, 69, 69); // red
         MyTriangle (redTriangleX1, redTriangleY1);
      
-
         fill(52, 161, 235); // blue
         MyTriangle (blueTriangleX1, blueTriangleY1);
-
 
         fill(237, 185, 43); // yellow
         MyTriangle (yellowTriangleX1, yellowTriangleY1);
     
-        mousePressed ();
-                if (clickedTriRed = true ) {
+                if (clickedTriRed == true ) {
                     fill(255, 69, 69); // red
                     redTriangleX1 = mouseX - 50;
                     redTriangleY1 = mouseY + 50;
@@ -420,6 +427,7 @@ public class App extends PApplet {
                     MyTriangle(blueTriangleX1, blueTriangleY1);
                 }
                 else if (clickedTriYellow) {
+                    fill(237, 185, 43); // yellow
                     yellowTriangleX1 = mouseX - 50;
                     yellowTriangleY1 = mouseY + 50;
                     MyTriangle(yellowTriangleX1,yellowTriangleY1);
@@ -427,3 +435,12 @@ public class App extends PApplet {
      }
 }
 
+// = assign
+// == compare
+
+// if triangles overlapping sout correct
+// else sout the triangles aren't in the correct place
+
+// yellow triangle not working
+// triangles cant be droped into place here box black 
+// click start is not working and should
