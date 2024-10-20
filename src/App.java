@@ -58,7 +58,7 @@ public class App extends PApplet {
     float rectX2 = 480, rectY2 = 300; // Place here box 2
     float rectX3 = 635, rectY3 = 300; // Place here box 3
 
-    float blueTriX1 = 325, blueTriY1 = 100, blueTriX2 = 425, blueTriY2 = 100, blueTriX3 = 375, blueTriY3 = 10;
+    float blueTriX1 = 325, blueTriY1 = 100, blueTriX2 = 425, blueTriY2 = 100, blueTriX3 = 375, blueTriY3 = 10; // orders 
     float redTriX1 = 450, redTriY1 = 100, redTriX2 = 550, redTriY2 = 100, redTriX3 = 500, redTriY3 = 10;
     float yellowTriX1 = 575, yellowTriY1 = 100, yellowTriX2 = 675, yellowTriY2 = 100, yellowTriX3 = 625, yellowTriY3 = 10;
 
@@ -89,7 +89,7 @@ public class App extends PApplet {
         size(800, 800); // Set the size of the window
     }
 
-    public void draw() {
+    public void draw() { // home base instructions 
 
         if(gameState == 0){
             homePage();
@@ -103,14 +103,15 @@ public class App extends PApplet {
             gameSetup();
             gamestart();
             //show level 1 stuff and show next button
-            //make next button clickable
+            //make next button clickable 
+            // there are two steps for a level setup, and setup do next  
         }else if(gameState == 3){
-            TheNextlevel();
+            TheNextlevel(); // next level set up
             clicknext = false;
         }
     }
 
-    public void homePageInstructions (){
+    public void homePageInstructions (){ // setup for homepage 
         fill(209, 169, 199); // pink
         rect(325, 125, 200, 100); // start box
         fill(0);
@@ -120,7 +121,7 @@ public class App extends PApplet {
         text("Click once to drag box, click again to drop box", 100, 400);
     }
 
-    public void homePage() {
+    public void homePage() { // home page decor 
         background(108, 213, 217); // Clear the screen every frame, light blue grey background
         // Draw Rectangle 1
         fill(255, 182, 193); // Pale pink color
@@ -159,16 +160,12 @@ public class App extends PApplet {
         }
     }
 
-    public void mouseTap() {
-        if ( gameState == 0 && clickstart == false && mouseX > startX && mouseY > startY && mouseX < startX + startWidth
-                && mouseY < startY + startHeight) {
-            clickstart = true;
+    public void mouseTap() { // staring time counter 
             startTime = millis();
             System.out.println("click start");
-        }
     }
 
-    public void gameSetup() {
+    public void gameSetup() { // Draw text and other set up elements
         background(99, 119, 122);
         fill(0);
         textSize(32);
@@ -178,8 +175,7 @@ public class App extends PApplet {
         if (currentTime - startTime > visibleDuration) {
             isVisible = false; // Set visibility to false after 1 second
         }
-
-        // Draw text and other set up elements
+       
         fill(0);
         textSize(50);
         text("Order:", 200, 50);
@@ -198,7 +194,7 @@ public class App extends PApplet {
         rect(rectX3, rectY3, rectWidth, rectHeight);
     }
 
-    public boolean isMouseInTriangle(float x1, float y1, float mouseX, float mouseY) {   
+    public boolean isMouseInTriangle(float x1, float y1, float mouseX, float mouseY) {   // was to detect mouse in triangle 
         float deltaX = mouseX - x1; 
         float deltaY = y1 - mouseY;   // positive deltaY means mouse is about baseline 
      //    /|\
@@ -217,8 +213,12 @@ public class App extends PApplet {
    return false;
  }
 
-    public void mousePressed() {
+    public void mousePressed() { // this is the detection of all clicked things (next,moving blocks, and start)
         System.out.println("you clicked!");
+        if ( gameState == 0 && clickstart == false && mouseX > startX && mouseY > startY && mouseX < startX + startWidth
+            && mouseY < startY + startHeight) {
+              clickstart = true;
+            }
         if (mouseX > boxXred && mouseY > boxYred && mouseX < boxXred + boxWidth && mouseY < boxYred + boxHeight) { // first lvl
             clickedBoxRed = !clickedBoxRed; // Toggle clicked state
         } else if (mouseX > boxXblue && mouseY > boxYblue && mouseX < boxXblue + boxWidth 
@@ -278,12 +278,11 @@ public class App extends PApplet {
                                     //         return abs((float) ((x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / 2.0)); // abs is absulute value
                                     //     }
 
- public void MyTriangle (float triX, float triY) {
+ public void MyTriangle (float triX, float triY) { // making triangles easier to be made 
     triangle (triX, triY, triX + base,triY,triX + base/ 2, triY - height);
  }
 
-public void placeHereBox (){
-    // Draw the "place here" box
+public void placeHereBox (){ // Draw the "place here" box
     fill(0); // Black
     rect(rectX, rectY, rectWidth, rectHeight);
 
@@ -294,7 +293,7 @@ public void placeHereBox (){
     rect(rectX3, rectY3, rectWidth, rectHeight);
 }
 
-    public void gamestart() {
+    public void gamestart() { // running lvl 1
         placeHereBox();
         gameSetup();
         // Only draw the order box if isVisible is true
@@ -316,7 +315,7 @@ public void placeHereBox (){
 
         // Check if rectangles are overlapping
         if (isOverlapping(rectX, rectY, rectWidth, rectHeight, boxXred, boxYred, rectWidth, rectHeight)) {
-            fill(0); // Change fill color to black if overlapping
+            fill(0); 
             textSize(32);
             text("The red rectangle is in the correct place", 80, 90);
             redOverlapping = true;
@@ -327,7 +326,6 @@ public void placeHereBox (){
         }
         if (isOverlapping(boxXblue, boxYblue, boxWidth, boxHeight, rectX2, rectY2, rectWidth,
                 rectHeight)) {
-            fill(0); // Change fill color to black if overlapping
             textSize(32);
             text("The blue rectangle is in the correct place", 80, 120);
             blueOverlapping = true;
@@ -377,26 +375,17 @@ public void placeHereBox (){
         background(123, 73, 156);
         int currentTime2 = millis();
         if (currentTime2 - startTime2 > visibleDuration) {
-            isVisble2 = false; // Set visibility to false after 1 second
+            isVisble2 = false; // order will be invisible
         }
         gameSetup();
 
         if (clicknext == true && mouseX > nextX && mouseY > nextY && mouseX < nextX + nextWidth
                 && mouseY < nextY + nextHeight) { // if next is clicked
             startTime2 = millis(); // new start time
-            isVisble2 = true; // boxes will be visible
+            isVisble2 = true; // order will be visible
             System.out.println("hiding the tri"); 
         }
-
-        // Draw the "place here" box
-        fill(0);
-        rect(rectX, rectY, rectWidth, rectHeight);
-
-        fill(0); // second place here box
-        rect(rectX2, rectY2, rectWidth, rectHeight);
-
-        fill(0); // third place here box
-        rect(rectX3, rectY3, rectWidth, rectHeight);
+        placeHereBox();
 
         if (isVisble2) { // new count
             fill(255, 69, 69); // red
@@ -434,7 +423,6 @@ public void placeHereBox (){
                 }
      }
 }
-
 // = assign
 // == compare
 
@@ -443,4 +431,3 @@ public void placeHereBox (){
 
 // yellow triangle not working
 // triangles cant be droped into place here box black 
-// click start is not working and should
